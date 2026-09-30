@@ -1,0 +1,33 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>全国MAP 操作パネル</title><style>
+*{box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;margin:0;background:#fff7fa;color:#59424a}
+main{max-width:760px;margin:auto;padding:28px}h1{margin-bottom:4px}.note{color:#8b6c77;margin-top:0}
+.search{width:100%;font-size:22px;padding:14px 16px;border:2px solid #f1bfd1;border-radius:16px;outline:none}
+.row{display:flex;align-items:center;gap:10px;background:#fff;margin:8px 0;padding:12px;border-radius:16px;box-shadow:0 3px 12px rgba(120,70,90,.08)}
+.name{font-size:18px;font-weight:700;flex:1}.count{min-width:70px;text-align:center;font-size:20px;font-weight:800}
+button{border:0;border-radius:12px;padding:10px 16px;font-size:18px;cursor:pointer}.plus{background:#f4a9c5;color:#fff}.minus{background:#eee;color:#665}.reset{margin-top:22px;background:#fff;border:1px solid #ddd;font-size:14px}
+.summary{margin:14px 0;padding:14px;background:#fff;border-radius:16px}.tip{font-size:13px;color:#886b75}
+</style></head>
+<body><main><h1>🌸 全国MAP 操作パネル</h1><p class="note">地図の場所は知らなくてOK。県名を検索して＋1するだけ。</p>
+<input id="q" class="search" placeholder="例：長野 / ながの / 福岡" autofocus>
+<div class="summary"><b id="summary"></b><div class="tip">人数はこのブラウザに自動保存されます。</div></div>
+<div id="list"></div><button class="reset" id="reset">全データをリセット</button>
+</main><script>
+const PREFS=["北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県", "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県", "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県", "岐阜県", "静岡県", "愛知県", "三重県", "滋賀県", "京都府", "大阪府", "兵庫県", "奈良県", "和歌山県", "鳥取県", "島根県", "岡山県", "広島県", "山口県", "徳島県", "香川県", "愛媛県", "高知県", "福岡県", "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"];
+const kana={"北海道":"ほっかいどう","青森県":"あおもり","岩手県":"いわて","宮城県":"みやぎ","秋田県":"あきた","山形県":"やまがた","福島県":"ふくしま","茨城県":"いばらき","栃木県":"とちぎ","群馬県":"ぐんま","埼玉県":"さいたま","千葉県":"ちば","東京都":"とうきょう","神奈川県":"かながわ","新潟県":"にいがた","富山県":"とやま","石川県":"いしかわ","福井県":"ふくい","山梨県":"やまなし","長野県":"ながの","岐阜県":"ぎふ","静岡県":"しずおか","愛知県":"あいち","三重県":"みえ","滋賀県":"しが","京都府":"きょうと","大阪府":"おおさか","兵庫県":"ひょうご","奈良県":"なら","和歌山県":"わかやま","鳥取県":"とっとり","島根県":"しまね","岡山県":"おかやま","広島県":"ひろしま","山口県":"やまぐち","徳島県":"とくしま","香川県":"かがわ","愛媛県":"えひめ","高知県":"こうち","福岡県":"ふくおか","佐賀県":"さが","長崎県":"ながさき","熊本県":"くまもと","大分県":"おおいた","宮崎県":"みやざき","鹿児島県":"かごしま","沖縄県":"おきなわ"};
+const KEY='sakuraListenerMapV1';
+function get(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}}
+function save(d){localStorage.setItem(KEY,JSON.stringify(d));render()}
+function change(p,delta){let d=get();d[p]=Math.max(0,Number(d[p]||0)+delta);d._last={pref:p,count:d[p],t:Date.now()};save(d)}
+function render(){
+ let d=get(), q=document.getElementById('q').value.trim().toLowerCase();
+ let arr=PREFS.filter(p=>!q||p.includes(q)||(kana[p]||'').includes(q));
+ let total=PREFS.reduce((s,p)=>s+Number(d[p]||0),0), covered=PREFS.filter(p=>Number(d[p]||0)>0).length;
+ document.getElementById('summary').textContent=`制覇 ${covered} / 47　｜　全国合計 ${total}人`;
+ document.getElementById('list').innerHTML=arr.map(p=>`<div class="row"><div class="name">${p}</div><button class="minus" data-p="${p}">−1</button><div class="count">${Number(d[p]||0)}人</div><button class="plus" data-p="${p}">＋1</button></div>`).join('');
+ document.querySelectorAll('.plus').forEach(b=>b.onclick=()=>change(b.dataset.p,1));
+ document.querySelectorAll('.minus').forEach(b=>b.onclick=()=>change(b.dataset.p,-1));
+}
+document.getElementById('q').addEventListener('input',render);
+document.getElementById('reset').onclick=()=>{if(confirm('47都道府県の人数をすべて0に戻しますか？')){localStorage.removeItem(KEY);render()}};
+render();
+</script></body></html>

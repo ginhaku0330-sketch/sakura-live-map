@@ -1,0 +1,82 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>さくらの全国リスナーMAP</title><style>
+:root{--pink:#f7c8d8;--deep:#d96591;--ink:#59424a;--paper:rgba(255,250,252,.94)}
+*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;color:var(--ink)}
+body.overlay{background:transparent;padding:18px}
+.card{background:var(--paper);border:3px solid #fff;border-radius:28px;box-shadow:0 10px 35px rgba(120,70,90,.18);padding:20px}
+h1{margin:0;text-align:center;font-size:30px}.sub{text-align:center;margin:6px 0 14px;color:#8c6a76}
+.stats{display:flex;gap:12px;justify-content:center;margin-bottom:15px}.stat{background:#fff;border:2px solid #f6d8e3;border-radius:18px;padding:8px 16px;text-align:center}.stat b{font-size:24px;color:var(--deep)}
+.map{display:grid;grid-template-columns:repeat(11,68px);grid-template-rows:repeat(15,50px);gap:4px;justify-content:center;align-items:center}
+.pref{width:68px;height:50px;border-radius:12px;background:#f3f0f1;border:1px solid #e5dfe1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;transition:.25s;position:relative}
+.pref b{font-size:16px}.pref.on{background:#fce4ed;border-color:#efb6ca}.pref.hot{background:#f5bdd2}.pref.veryhot{background:#eb8fb2;color:#fff}
+.flash{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.8);background:white;border:4px solid var(--pink);border-radius:30px;padding:24px 38px;font-size:28px;font-weight:800;opacity:0;pointer-events:none;transition:.25s;box-shadow:0 12px 50px rgba(0,0,0,.18)}
+.flash.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+</style></head>
+<body class="overlay"><div class="card">
+<h1>🌸 さくらの全国リスナーMAP 🌸</h1>
+<div class="sub">あなたの都道府県、何人いる？</div>
+<div class="stats"><div class="stat">制覇<br><b id="covered">0</b> / 47</div><div class="stat">全国のお客さま<br><b id="total">0</b> 人</div></div>
+<div class="map"><div class="pref" data-pref="北海道" style="grid-row:1;grid-column:11"><span>北海道</span><b>0</b></div>
+<div class="pref" data-pref="青森県" style="grid-row:2;grid-column:10"><span>青森</span><b>0</b></div>
+<div class="pref" data-pref="岩手県" style="grid-row:3;grid-column:10"><span>岩手</span><b>0</b></div>
+<div class="pref" data-pref="宮城県" style="grid-row:4;grid-column:10"><span>宮城</span><b>0</b></div>
+<div class="pref" data-pref="秋田県" style="grid-row:3;grid-column:9"><span>秋田</span><b>0</b></div>
+<div class="pref" data-pref="山形県" style="grid-row:4;grid-column:9"><span>山形</span><b>0</b></div>
+<div class="pref" data-pref="福島県" style="grid-row:5;grid-column:9"><span>福島</span><b>0</b></div>
+<div class="pref" data-pref="茨城県" style="grid-row:6;grid-column:10"><span>茨城</span><b>0</b></div>
+<div class="pref" data-pref="栃木県" style="grid-row:6;grid-column:9"><span>栃木</span><b>0</b></div>
+<div class="pref" data-pref="群馬県" style="grid-row:6;grid-column:8"><span>群馬</span><b>0</b></div>
+<div class="pref" data-pref="埼玉県" style="grid-row:7;grid-column:9"><span>埼玉</span><b>0</b></div>
+<div class="pref" data-pref="千葉県" style="grid-row:8;grid-column:10"><span>千葉</span><b>0</b></div>
+<div class="pref" data-pref="東京都" style="grid-row:8;grid-column:9"><span>東京</span><b>0</b></div>
+<div class="pref" data-pref="神奈川県" style="grid-row:9;grid-column:9"><span>神奈川</span><b>0</b></div>
+<div class="pref" data-pref="新潟県" style="grid-row:5;grid-column:8"><span>新潟</span><b>0</b></div>
+<div class="pref" data-pref="富山県" style="grid-row:6;grid-column:7"><span>富山</span><b>0</b></div>
+<div class="pref" data-pref="石川県" style="grid-row:6;grid-column:6"><span>石川</span><b>0</b></div>
+<div class="pref" data-pref="福井県" style="grid-row:7;grid-column:6"><span>福井</span><b>0</b></div>
+<div class="pref" data-pref="山梨県" style="grid-row:8;grid-column:8"><span>山梨</span><b>0</b></div>
+<div class="pref" data-pref="長野県" style="grid-row:7;grid-column:8"><span>長野</span><b>0</b></div>
+<div class="pref" data-pref="岐阜県" style="grid-row:8;grid-column:7"><span>岐阜</span><b>0</b></div>
+<div class="pref" data-pref="静岡県" style="grid-row:9;grid-column:8"><span>静岡</span><b>0</b></div>
+<div class="pref" data-pref="愛知県" style="grid-row:9;grid-column:7"><span>愛知</span><b>0</b></div>
+<div class="pref" data-pref="三重県" style="grid-row:10;grid-column:7"><span>三重</span><b>0</b></div>
+<div class="pref" data-pref="滋賀県" style="grid-row:8;grid-column:6"><span>滋賀</span><b>0</b></div>
+<div class="pref" data-pref="京都府" style="grid-row:9;grid-column:6"><span>京</span><b>0</b></div>
+<div class="pref" data-pref="大阪府" style="grid-row:10;grid-column:6"><span>大阪</span><b>0</b></div>
+<div class="pref" data-pref="兵庫県" style="grid-row:10;grid-column:5"><span>兵庫</span><b>0</b></div>
+<div class="pref" data-pref="奈良県" style="grid-row:11;grid-column:7"><span>奈良</span><b>0</b></div>
+<div class="pref" data-pref="和歌山県" style="grid-row:11;grid-column:6"><span>和歌山</span><b>0</b></div>
+<div class="pref" data-pref="鳥取県" style="grid-row:9;grid-column:4"><span>鳥取</span><b>0</b></div>
+<div class="pref" data-pref="島根県" style="grid-row:9;grid-column:3"><span>島根</span><b>0</b></div>
+<div class="pref" data-pref="岡山県" style="grid-row:10;grid-column:4"><span>岡山</span><b>0</b></div>
+<div class="pref" data-pref="広島県" style="grid-row:10;grid-column:3"><span>広島</span><b>0</b></div>
+<div class="pref" data-pref="山口県" style="grid-row:10;grid-column:2"><span>山口</span><b>0</b></div>
+<div class="pref" data-pref="徳島県" style="grid-row:12;grid-column:5"><span>徳島</span><b>0</b></div>
+<div class="pref" data-pref="香川県" style="grid-row:11;grid-column:5"><span>香川</span><b>0</b></div>
+<div class="pref" data-pref="愛媛県" style="grid-row:12;grid-column:4"><span>愛媛</span><b>0</b></div>
+<div class="pref" data-pref="高知県" style="grid-row:13;grid-column:4"><span>高知</span><b>0</b></div>
+<div class="pref" data-pref="福岡県" style="grid-row:11;grid-column:1"><span>福岡</span><b>0</b></div>
+<div class="pref" data-pref="佐賀県" style="grid-row:12;grid-column:1"><span>佐賀</span><b>0</b></div>
+<div class="pref" data-pref="長崎県" style="grid-row:13;grid-column:1"><span>長崎</span><b>0</b></div>
+<div class="pref" data-pref="熊本県" style="grid-row:12;grid-column:2"><span>熊本</span><b>0</b></div>
+<div class="pref" data-pref="大分県" style="grid-row:11;grid-column:2"><span>大分</span><b>0</b></div>
+<div class="pref" data-pref="宮崎県" style="grid-row:13;grid-column:2"><span>宮崎</span><b>0</b></div>
+<div class="pref" data-pref="鹿児島県" style="grid-row:14;grid-column:2"><span>鹿児島</span><b>0</b></div>
+<div class="pref" data-pref="沖縄県" style="grid-row:15;grid-column:1"><span>沖縄</span><b>0</b></div></div></div><div id="flash" class="flash"></div>
+<script>
+const KEY='sakuraListenerMapV1';
+function data(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}}
+function render(){
+ const d=data(); let total=0,covered=0;
+ document.querySelectorAll('.pref').forEach(el=>{
+  let n=Number(d[el.dataset.pref]||0); total+=n;if(n>0)covered++;
+  el.querySelector('b').textContent=n;
+  el.classList.toggle('on',n>0);el.classList.toggle('hot',n>=5);el.classList.toggle('veryhot',n>=10);
+ });
+ totalEl=document.getElementById('total');coveredEl=document.getElementById('covered');
+ totalEl.textContent=total;coveredEl.textContent=covered;
+}
+window.addEventListener('storage',e=>{if(e.key===KEY){render(); if(e.newValue){let x=JSON.parse(e.newValue);if(x._last)showFlash(x._last)}}});
+function showFlash(x){const f=document.getElementById('flash');f.textContent=`🌸 ${x.pref} ${x.count}人目！`;f.classList.add('show');setTimeout(()=>f.classList.remove('show'),2200)}
+render();setInterval(render,1000);
+</script></body></html>
