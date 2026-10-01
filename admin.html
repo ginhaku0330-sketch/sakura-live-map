@@ -1,29 +1,14 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>さくらMAP 管理</title><style>
-body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif;background:#fff5f8;color:#6f4352;margin:0;padding:24px}
-.wrap{max-width:680px;margin:auto} h1{color:#b65d7a} input{width:100%;box-sizing:border-box;padding:16px;border:2px solid #f0bfd0;border-radius:16px;font-size:20px}
-.card{background:white;border:2px solid #f7d5e0;border-radius:20px;padding:18px;margin-top:14px;box-shadow:0 8px 25px #d98aa322}
-.row{display:flex;align-items:center;justify-content:space-between;gap:10px} button{border:0;border-radius:14px;padding:12px 18px;font-size:18px;cursor:pointer}
-.plus{background:#f7a9c3;color:white} .minus{background:#eee;color:#765} .count{font-size:28px;font-weight:800;color:#c95d82}
-.small{font-size:13px;color:#9a7280;margin-top:8px} #results{margin-top:10px}
-</style></head><body><div class="wrap"><h1>🌸 さくらの全国リスナーMAP 管理</h1>
-<input id="q" placeholder="例：福岡 / ふくおか / 長野">
-<div id="summary" class="card"></div><div id="results"></div></div>
-<script>const PREFS=["北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県", "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県", "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県", "岐阜県", "静岡県", "愛知県", "三重県", "滋賀県", "京都府", "大阪府", "兵庫県", "奈良県", "和歌山県", "鳥取県", "島根県", "岡山県", "広島県", "山口県", "徳島県", "香川県", "愛媛県", "高知県", "福岡県", "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"];
-const ALIASES={"北海道": ["ほっかいどう"], "青森県": ["あおもり", "あおもりけん"], "岩手県": ["いわて", "いわてけん"], "宮城県": ["みやぎ", "みやぎけん"], "秋田県": ["あきた", "あきたけん"], "山形県": ["やまがた", "やまがたけん"], "福島県": ["ふくしま", "ふくしまけん"], "茨城県": ["いばらき", "いばらきけん"], "栃木県": ["とちぎ", "とちぎけん"], "群馬県": ["ぐんま", "ぐんまけん"], "埼玉県": ["さいたま", "さいたまけん"], "千葉県": ["ちば", "ちばけん"], "東京都": ["とうきょう", "とうきょうと"], "神奈川県": ["かながわ", "かながわけん"], "新潟県": ["にいがた", "にいがたけん"], "富山県": ["とやま", "とやまけん"], "石川県": ["いしかわ", "いしかわけん"], "福井県": ["ふくい", "ふくいけん"], "山梨県": ["やまなし", "やまなしけん"], "長野県": ["ながの", "ながのけん"], "岐阜県": ["ぎふ", "ぎふけん"], "静岡県": ["しずおか", "しずおかけん"], "愛知県": ["あいち", "あいちけん"], "三重県": ["みえ", "みえけん"], "滋賀県": ["しが", "しがけん"], "京都府": ["きょうと", "きょうとふ"], "大阪府": ["おおさか", "おおさかふ"], "兵庫県": ["ひょうご", "ひょうごけん"], "奈良県": ["なら", "ならけん"], "和歌山県": ["わかやま", "わかやまけん"], "鳥取県": ["とっとり", "とっとりけん"], "島根県": ["しまね", "しまねけん"], "岡山県": ["おかやま", "おかやまけん"], "広島県": ["ひろしま", "ひろしまけん"], "山口県": ["やまぐち", "やまぐちけん"], "徳島県": ["とくしま", "とくしまけん"], "香川県": ["かがわ", "かがわけん"], "愛媛県": ["えひめ", "えひめけん"], "高知県": ["こうち", "こうちけん"], "福岡県": ["ふくおか", "ふくおかけん"], "佐賀県": ["さが", "さがけん"], "長崎県": ["ながさき", "ながさきけん"], "熊本県": ["くまもと", "くまもとけん"], "大分県": ["おおいた", "おおいたけん"], "宮崎県": ["みやざき", "みやざきけん"], "鹿児島県": ["かごしま", "かごしまけん"], "沖縄県": ["おきなわ", "おきなわけん"]};
-const KEY='sakuraListenerMapV3';
-function getData(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}}
-function setData(d){localStorage.setItem(KEY,JSON.stringify(d)); window.dispatchEvent(new Event('storage-local'))}
-function total(d){return Object.values(d).reduce((a,b)=>a+(+b||0),0)}
-function covered(d){return PREFS.filter(p=>(+d[p]||0)>0).length}
-
-function norm(s){return (s||'').trim().toLowerCase().replace(/[ 　]/g,'')}
-function matches(p,q){let n=norm(q); if(!n)return false; let names=[p,p.replace(/[都府県]$/,'')].concat(ALIASES[p]||[]); return names.some(x=>norm(x).includes(n))}
-function change(p,delta){let d=getData(); d[p]=Math.max(0,(+d[p]||0)+delta); setData(d); render()}
-function render(){
- let d=getData(); document.getElementById('summary').innerHTML=`<b>制覇 ${covered(d)}/47</b>　🌸 全国のお客さま <b>${total(d)}人</b>`;
- let q=document.getElementById('q').value; let arr=q?PREFS.filter(p=>matches(p,q)):PREFS.filter(p=>(+d[p]||0)>0);
- document.getElementById('results').innerHTML=arr.map(p=>`<div class="card row"><div><b>${p}</b><div class="small">現在</div></div><div class="row"><button class="minus" onclick="change('${p}',-1)">−1</button><span class="count">${+d[p]||0}</span><button class="plus" onclick="change('${p}',1)">＋1</button></div></div>`).join('') || '<div class="small">県名を入力すると出てくるよ🌸</div>';
-}
-q.addEventListener('input',render); render();
-</script></body></html>
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>さくら専用配信コントローラー</title>
+<link rel="stylesheet" href="admin.css"></head>
+<body><main>
+<header><p class="eyebrow">SAKURA LIVE</p><h1>🌸 さくら専用<br>配信コントローラー</h1><p>全国のお客さまを、桜色の地図に。</p></header>
+<section class="card connection"><p id="connection" role="status">接続中…</p><button id="login" disabled>Googleで管理者ログイン</button><button id="logout" hidden>ログアウト</button><p id="account" class="small"></p><p id="message" role="status"></p></section>
+<section class="stats" aria-label="累計"><div class="card">制覇<strong id="covered">— / 47</strong></div><div class="card">全国のお客さま<strong id="total">— 人</strong></div></section>
+<section class="card"><label for="q"><h2>都道府県をさがす</h2></label><input id="q" type="search" placeholder="福岡・ふくおか・フクオカ" autocomplete="off"><p class="small">＋1で追加、−1で修正。人数は累計として自動保存されます。</p><div id="results"></div></section>
+<section class="card"><h2>🌹 Roseカウンター</h2><div class="counter"><button data-rose="-1" disabled aria-label="Roseを1本減らす">−1</button><strong id="roses">—</strong><button class="plus" data-rose="1" disabled aria-label="Roseを1本増やす">＋1</button></div><p class="small">手動カウント・累計。TikTokとの自動連携は未接続です。</p></section>
+<details class="card"><summary>コメントから承認候補を作る</summary><p class="small">今はコメントを手動で貼り付けます。名前・コメントは共通保存先に送信しません。候補はこの画面を閉じると消えます。</p><label for="viewer">お名前</label><input id="viewer" placeholder="○○さん" maxlength="80"><label for="comment">コメント</label><textarea id="comment" placeholder="福岡から来ました！" maxlength="2000"></textarea><button id="detect">候補を表示</button><p class="small">複数の県名や否定文も候補になります。内容を確かめてから承認してください。</p><div id="candidates"></div></details>
+<details class="card"><summary>データの引き継ぎ・バックアップ</summary><p class="small">以前の管理画面を使っていたSafariで、同じURLを開くと引き継げます。共通保存先に人数がある場合は取り込みできません。</p><p id="legacy"></p><button id="import" disabled>以前の人数を一度だけ取り込む</button><button id="backup" disabled>累計データをダウンロード</button></details>
+<footer><a href="display.html" target="_blank" rel="noopener">配信用の地図を開く ↗</a><p>集計値は配信画面と共通です。人数は追加回数で、視聴者の自動重複判定はありません。</p></footer>
+</main><script type="module" src="admin.js"></script></body></html>
